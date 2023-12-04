@@ -115,6 +115,7 @@ func (vo *VictorOpsNotifier) Notify(messages Messages) bool {
 			log.Error("Error JSON-ifying VictorOps alert. ", jsonError)
 			continue
 		}
+		log.Infof("json = %s", string(eventJSON))
 
 		response, httpError := http.Post(endpoint, "application/json", bytes.NewBuffer(eventJSON))
 
