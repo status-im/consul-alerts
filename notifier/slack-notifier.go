@@ -44,7 +44,7 @@ func (slack *SlackNotifier) Copy() Notifier {
 	return &notifier
 }
 
-//Notify sends messages to the endpoint notifier
+// Notify sends messages to the endpoint notifier
 func (slack *SlackNotifier) Notify(messages Messages) bool {
 
 	if slack.Detailed {
@@ -125,7 +125,7 @@ func (slack *SlackNotifier) postToSlack() bool {
 		log.Println("Unable to marshal slack payload:", err)
 		return false
 	}
-	log.Debugf("struct = %+v, json = %s", slack, string(data))
+	log.Infof("json = %s", string(data))
 
 	b := bytes.NewBuffer(data)
 	if res, err := http.Post(slack.Url, "application/json", b); err != nil {
