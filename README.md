@@ -567,11 +567,12 @@ needs to be configured.
 
 prefix: `consul-alerts/config/notifiers/victorops/`
 
-| key          | description                                         |
-|--------------|-----------------------------------------------------|
-| enabled      | Enable the VictorOps notifier. [Default: false]     |
-| api-key      | API Key                              (mandatory)    |
-| routing-key  | Routing Key                          (mandatory)    |
+| key          | description                                             |
+|--------------|---------------------------------------------------------|
+| enabled      | Enable the VictorOps notifier. [Default: false]         |
+| api-key      | API Key                                  (mandatory)    |
+| routing-key  | Routing Key                              (mandatory)    |
+| message-type | Message type like CRITIAL or WARNING.    (optional)     |
 
 #### HTTP Endpoint
 

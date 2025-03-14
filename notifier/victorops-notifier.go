@@ -12,9 +12,10 @@ import (
 
 // VictorOpsNotifier provides configuration options for the VictorOps notifier
 type VictorOpsNotifier struct {
-	Enabled    bool
-	APIKey     string `json:"api-key"`
-	RoutingKey string `json:"routing-key"`
+	Enabled     bool
+	APIKey      string `json:"api-key"`
+	RoutingKey  string `json:"routing-key"`
+	MessageType string `json:"message-type"`
 }
 
 // VictorOpsEvent represents the options we'll pass to the VictorOps API
@@ -74,16 +75,20 @@ func (vo *VictorOpsNotifier) Notify(messages Messages) bool {
 
 		var messageType string
 
-		switch {
-		case message.IsCritical():
-			messageType = "CRITICAL"
-		case message.IsWarning():
-			messageType = "WARNING"
-		case message.IsPassing():
-			messageType = "RECOVERY"
-		default:
-			log.Warn(fmt.Sprintf("Message with status %s was neither critical, warning, nor passing, reporting to VictorOps as INFO", message.Status))
-			messageType = "INFO"
+		if vo.MessageType != "" {
+			messageType = vo.MessageType
+		} else {
+			switch {
+			case message.IsCritical():
+				messageType = "CRITICAL"
+			case message.IsWarning():
+				messageType = "WARNING"
+			case message.IsPassing():
+				messageType = "RECOVERY"
+			default:
+				log.Warn(fmt.Sprintf("Message with status %s was neither critical, warning, nor passing, reporting to VictorOps as INFO", message.Status))
+				messageType = "INFO"
+			}
 		}
 
 		// VictorOps automatically displays the entity display name in notifications and page SMSs / emails,
