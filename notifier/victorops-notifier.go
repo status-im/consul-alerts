@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 
 	log "github.com/AcalephStorage/consul-alerts/Godeps/_workspace/src/github.com/Sirupsen/logrus"
@@ -134,8 +135,18 @@ func (vo *VictorOpsNotifier) Notify(messages Messages) bool {
 			log.Error(fmt.Sprintf("Expected VictorOps endpoint to return 200, but it returned %d", response.StatusCode))
 			continue
 		}
+
+		bodyBytes, readError := io.ReadAll(response.Body)
+		if readError != nil {
+			log.Error(fmt.Sprintf("Failed to read VictorOps APi response: %s", readError))
+			continue
+		}
+		responseBody := string(bodyBytes)
+
+		log.Printf("VictorOps event sent: entityID:%s, type:%s", entityID, messageType)
+		log.Debugf("VictorOps response(%d): %s", response.StatusCode, responseBody)
 	}
 
-	log.Println("VictorOps notification sent.")
+	log.Println("VictorOps notifications sent.")
 	return ok
 }
